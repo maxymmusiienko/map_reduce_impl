@@ -1,12 +1,13 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 use crate::core::traits::{MapReduceEngine, MapReduceTask};
 
 pub struct SequentialEngine;
 
 impl MapReduceEngine for SequentialEngine {
-    fn execute<T>(&self, task: &T, inputs: Vec<T::Input>) -> HashMap<T::IntermediateKey, T::Output>
+    fn execute<T>(&self, task: Arc<T>, inputs: Vec<T::Input>) -> HashMap<T::IntermediateKey, T::Output>
     where
-        T: MapReduceTask
+        T: MapReduceTask + 'static
     {
         let mut grouped: HashMap<T::IntermediateKey, Vec<T::IntermediateValue>> = HashMap::new();
         for input in inputs {
